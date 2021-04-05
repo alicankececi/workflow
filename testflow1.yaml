@@ -1,0 +1,31 @@
+version: '2.0'
+
+TestFlow:
+  type: 'direct'
+  description: 'workflow practice'
+  
+  input:
+    - host: localhost
+    - duration: 5
+  output:
+    status: success
+    delay: <% $.task1_result.RTT %>
+    loss: <% $.task1_result.loss %>
+  output-on-error:
+    status: failed
+    reason: <% $.task1_error %> 
+   
+  
+  tasks:
+    task1:
+      action: nsp.ping
+      input:
+        host: <% $.host %>
+        duration: <% $.duration %>
+      publish:
+        task1_result: <% task().result %>
+      publish-on-error:
+        task1_error: <% task().result %>
+      
+
+     
